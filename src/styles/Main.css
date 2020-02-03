@@ -28,7 +28,7 @@ body {
 
 .scores {
   text-align: right;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .scores span {
@@ -81,7 +81,7 @@ body {
   border-radius: 7px;
   outline: none;
   position: relative;
-  margin-top: 30%;
+  margin-top: 10%;
 }
 
 .board .cell,

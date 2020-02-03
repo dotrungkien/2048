@@ -9,7 +9,7 @@ body {
 }
 
 .btn-primary {
-  color: #FFFFFF;
+  color: #ffffff;
   background-color: rgb(33, 31, 109) !important;
   border: 0 !important;
 }
@@ -19,7 +19,8 @@ body {
   border: 0;
 }
 
-.btn-primary.disabled, .btn-primary:disabled {
+.btn-primary.disabled,
+.btn-primary:disabled {
   opacity: 0.5;
   background-color: rgb(135, 172, 196);
 }
@@ -78,4 +79,11 @@ body {
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.0470588) 0px 4px 4px;
+}
+
+.howto {
+  width: 430px;
+  font-family: 'Clear Sans';
+  font-size: 19px;
+  color: #776e65;
 }

@@ -138,7 +138,11 @@ class BoardView extends Component {
               {tiles}
               <GameEndOverlay board={this.state.board} onRestart={this.restartGame.bind(this)} />
             </div>
+            <p className="howto mx-auto pt-3 my-4">
+              <strong>HOW TO PLAY</strong> : Use your <strong> arrow keys </strong> to move the tiles. When two tiles with the same number touch, they <strong> merge into one!</strong>
+            </p>
           </div>
+
           <div className="col">
             {/* <LeaderBoard users={[{ account: 'kien', score: 10 }]} /> */}
           </div>
