@@ -111,11 +111,16 @@ class BoardView extends Component {
       .map(tile => <TileView tile={tile} key={tile.id} />);
     const username = this.props.userSession.loadUserData().username;
     const profile = this.props.userSession.loadUserData().profile;
-    const user = new Person(profile);
+    const person = new Person(profile);
     return (
       <div className="container-fluid">
         <div className="row">
-          <NavBar username={username} user={user} signOut={this.props.handleSignOut} />
+          <NavBar
+            userSession={this.props.userSession}
+            username={username}
+            person={person}
+            signOut={this.props.handleSignOut}
+          />
         </div>
         <div className="row">
           <div className="col">
