@@ -42,7 +42,6 @@ body {
   font-weight: bold;
   border-radius: 3px;
   color: white;
-  margin-top: 4px;
   text-align: center;
   text-transform: uppercase;
   padding-top: 0px;
@@ -257,4 +256,22 @@ body {
 
 .overlay .message {
   color: #666;
+}
+
+.howto {
+  width: 430px;
+  font-family: 'Clear Sans';
+  font-size: 19px;
+  color: #776e65;
+}
+
+.leaderboard {
+  width: 400px;
+  font-size: 19px;
+  color: #776e65;
+}
+
+.leadheader {
+  color: white;
+  background: #8f7a66;
 }

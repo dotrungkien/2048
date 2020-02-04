@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { Board } from './Board';
 import NavBar from './NavBar';
-// import LeaderBoard from './LeaderBoard';
+import Leaderboard from './Leaderboard';
 import { UserSession, Person } from 'blockstack';
 import { appConfig, BEST_SCORE_FILENAME } from '../assets/constants';
+
+import firebase from './firebase.js';
 
 class BoardView extends Component {
   constructor(props) {
     super(props);
     this.userSession = new UserSession({ appConfig });
-    this.state = { ready: false, board: new Board(), score: 0, bestScore: 0 };
+    this.state = { ready: false, board: new Board(), score: 0, bestScore: 0, highscores: [] };
   }
 
   restartGame() {
     this.setState({ board: new Board(), score: 0 });
+    this.loadHighScores();
   }
 
   handleKeyDown(event) {
@@ -65,10 +68,42 @@ class BoardView extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
     this.loadBestScore();
+    this.loadHighScores();
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown.bind(this));
+  }
+
+  async loadHighScores() {
+    const highScoresRef = firebase
+      .database()
+      .ref('highScores')
+      .limitToFirst(11);
+    const snapshot = await highScoresRef.once('value');
+    let highScores = [];
+    snapshot.forEach(child => {
+      const score = child.val();
+      if (0 < score && score < 999999) highScores.push({ name: child.key, score });
+      return false;
+    });
+    highScores = highScores.sort((a, b) => (a.score < b.score ? 1 : a.score > b.score ? -1 : 0));
+    this.setState({ highScores });
+  }
+
+  updateBestScore() {
+    const username = this.props.userSession.loadUserData().username.split('.')[0];
+    firebase
+      .database()
+      .ref(`highScores/${username}`)
+      .set(this.state.bestScore, err => {
+        if (err) {
+          console.error('Something went wrong when save score.');
+        } else {
+          console.log('Save score successfully.');
+          this.loadHighScores();
+        }
+      });
   }
 
   loadBestScore() {
@@ -77,6 +112,7 @@ class BoardView extends Component {
       this.setState({ ready: true });
       if (content) {
         const bestScore = JSON.parse(content);
+
         this.setState({ bestScore, redirectToMe: false });
       } else {
         const bestScore = 0;
@@ -88,6 +124,7 @@ class BoardView extends Component {
   saveBestScore() {
     const bestScore = this.state.bestScore;
     const options = { encrypt: false };
+    this.updateBestScore();
     this.userSession.putFile(BEST_SCORE_FILENAME, JSON.stringify(bestScore), options);
   }
 
@@ -139,12 +176,14 @@ class BoardView extends Component {
               <GameEndOverlay board={this.state.board} onRestart={this.restartGame.bind(this)} />
             </div>
             <p className="howto mx-auto pt-3 my-4">
-              <strong>HOW TO PLAY</strong> : Use your <strong> arrow keys </strong> to move the tiles. When two tiles with the same number touch, they <strong> merge into one!</strong>
+              <strong>HOW TO PLAY</strong> : Use your <strong> arrow keys </strong> to move the
+              tiles. When two tiles with the same number touch, they{' '}
+              <strong> merge into one!</strong>
             </p>
           </div>
 
-          <div className="col">
-            {/* <LeaderBoard users={[{ account: 'kien', score: 10 }]} /> */}
+          <div className="col justify-content-center">
+            <Leaderboard highScores={this.state.highScores} />
           </div>
         </div>
       </div>

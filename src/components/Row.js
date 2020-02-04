@@ -1,20 +1,16 @@
 import React from 'react';
 import { Row, Col } from 'reactstrap';
 
-const RowRank = props => {
-  return (
-    <Row className="colheader">
-      <Col className="col-xs-1">
-        <h4>{props.rank}</h4>
-      </Col>
-      <Col className="col-xs-1">
-        <h4>{props.name}</h4>
-      </Col>
-      <Col className="col-xs-1 recent">
-        <h4>{props.score}</h4>
-      </Col>
-    </Row>
-  );
-};
-
-export default RowRank;
+export default ({ rank, name, score }) => (
+  <Row className="colheader border-top">
+    <Col className="col-1">
+      <h6>{rank}</h6>
+    </Col>
+    <Col className="col-8">
+      <h6>{name}</h6>
+    </Col>
+    <Col className="col-2">
+      <h6>{score}</h6>
+    </Col>
+  </Row>
+);
