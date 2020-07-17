@@ -76,18 +76,17 @@ class BoardView extends Component {
   }
 
   async loadHighScores() {
-    const highScoresRef = firebase
-      .database()
-      .ref('highScores')
-      .limitToFirst(11);
+    const highScoresRef = firebase.database().ref('highScores');
     const snapshot = await highScoresRef.once('value');
     let highScores = [];
-    snapshot.forEach(child => {
+    snapshot.forEach((child) => {
       const score = child.val();
       if (0 < score && score < 999999) highScores.push({ name: child.key, score });
       return false;
     });
-    highScores = highScores.sort((a, b) => (a.score < b.score ? 1 : a.score > b.score ? -1 : 0));
+    highScores = highScores
+      .sort((a, b) => (a.score < b.score ? 1 : a.score > b.score ? -1 : 0))
+      .slice(0, 11);
     this.setState({ highScores });
   }
 
@@ -96,7 +95,7 @@ class BoardView extends Component {
     firebase
       .database()
       .ref(`highScores/${username}`)
-      .set(this.state.bestScore, err => {
+      .set(this.state.bestScore, (err) => {
         if (err) {
           console.error('Something went wrong when save score.');
         } else {
@@ -108,7 +107,7 @@ class BoardView extends Component {
 
   loadBestScore() {
     const options = { decrypt: false };
-    this.userSession.getFile(BEST_SCORE_FILENAME, options).then(content => {
+    this.userSession.getFile(BEST_SCORE_FILENAME, options).then((content) => {
       this.setState({ ready: true });
       if (content) {
         const bestScore = JSON.parse(content);
@@ -144,8 +143,8 @@ class BoardView extends Component {
       </div>
     ));
     var tiles = this.state.board.tiles
-      .filter(tile => tile.value !== 0)
-      .map(tile => <TileView tile={tile} key={tile.id} />);
+      .filter((tile) => tile.value !== 0)
+      .map((tile) => <TileView tile={tile} key={tile.id} />);
     const username = this.props.userSession.loadUserData().username;
     const profile = this.props.userSession.loadUserData().profile;
     const person = new Person(profile);
